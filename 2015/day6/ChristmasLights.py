@@ -15,15 +15,15 @@ class ChristmasLights:
 
     def Toggle(self, start, stop):
         startX, startY, stopX, stopY = self.GetIndices(start, stop)
-        self.lights[startX:stopX, startY:stopY] = 1 - self.lights[startX:stopX, startY:stopY]
+        self.lights[startX:stopX, startY:stopY] += 2
 
     def TurnOn(self, start, stop):
         startX, startY, stopX, stopY = self.GetIndices(start, stop)
-        self.lights[startX:stopX, startY:stopY] = 1
+        self.lights[startX:stopX, startY:stopY] += 1
 
     def TurnOff(self, start, stop):
         startX, startY, stopX, stopY = self.GetIndices(start, stop)
-        self.lights[startX:stopX, startY:stopY] = 0
+        self.lights[startX:stopX, startY:stopY][np.where(self.lights[startX:stopX, startY:stopY] > 0)] = (self.lights[startX:stopX, startY:stopY] - 1)[np.where(self.lights[startX:stopX, startY:stopY] > 0)]
 
     def GetIndices(self, start, stop):
         startX = int(start.split(',')[0])
