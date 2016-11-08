@@ -15,6 +15,7 @@ if __name__ == '__main__':
         print i
         number = translate(number)
     print 'Part 1: ', len(number)
+    number = '1321131112'
     for i in range(50):
         print i
         number = translate(number)
