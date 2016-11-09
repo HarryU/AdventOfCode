@@ -1,40 +1,47 @@
 from itertools import groupby
 import string
-import unittest
+# import unittest
+#
+#
+# class TestPasswordChecker(unittest.TestCase):
+#     def setUp(self):
+#         pass
+#
+#     def test_ExampleFailsRuleOne(self):
+#         self.assertFalse(RuleOne('abbceffg'))
+#
+#     def test_ExamplePassesRuleOne(self):
+#         self.assertTrue(RuleOne('hijklmn'))
+#
+#     def test_ExamplePassesRuleTwo(self):
+#         self.assertTrue(RuleTwo('abbceffg'))
+#
+#     def test_ExampleFailsRuleTwo(self):
+#         self.assertFalse(RuleTwo('hijklmn'))
+#
+#     def test_ExamplePassesRuleThree(self):
+#         self.assertTrue(RuleThree('abbcegjj'))
+#
+#     def test_ExampleFailsRuleThree(self):
+#         self.assertFalse(RuleThree('abbcegjk'))
+#
+#     def test_IncrementPassword(self):
+#         self.assertEqual('kdyehdnj', IncrementPassword('kdyehdni'))
 
-
-class TestPasswordChecker(unittest.TestCase):
-    def setUp(self):
-        pass
-
-    def test_ExampleFailsRuleOne(self):
-        self.assertFalse(RuleOne('abbceffg'))
-
-    def test_ExamplePassesRuleOne(self):
-        self.assertTrue(RuleOne('hijklmn'))
-
-    def test_ExamplePassesRuleTwo(self):
-        self.assertTrue(RuleTwo('abbceffg'))
-
-    def test_ExampleFailsRuleTwo(self):
-        self.assertFalse(RuleTwo('hijklmn'))
-
-    def test_ExamplePassesRuleThree(self):
-        self.assertTrue(RuleThree('abbcegjj'))
-
-    def test_ExampleFailsRuleThree(self):
-        self.assertFalse(RuleThree('abbcegjk'))
-
-    def test_IncrementPassword(self):
-        self.assertEqual('kdyehdnj', IncrementPassword('kdyehdni'))
 
 def IncrementPassword(password):
-    for i, char in enumerate(reversed(password)):
-        charValue = charInDec(char)
-        if charValue < 26:
-            newPassword = list(password)
-            newPassword[-1]  = string.ascii_lowercase[charValue + 1]
-            return str(newPassword)
+    i = 0
+    r = list(password)[::-1]
+    for c in r:
+        if c == 'z':
+            r[i] = 'a'
+        else:
+            r[i] = chr(ord(c) + 1)
+            break
+        i += 1
+    password = ''.join(r[::-1])
+    return password
+
 
 def ValidPassword(string):
     if not RuleOne(string):
@@ -76,4 +83,8 @@ if __name__ == '__main__':
     password = 'cqjxjnds'
     while not ValidPassword(password):
         password = IncrementPassword(password)
-
+    print password
+    password = IncrementPassword(password)
+    while not ValidPassword(password):
+        password = IncrementPassword(password)
+    print password
