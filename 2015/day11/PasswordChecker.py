@@ -25,8 +25,16 @@ class TestPasswordChecker(unittest.TestCase):
     def test_ExampleFailsRuleThree(self):
         self.assertFalse(RuleThree('abbcegjk'))
 
-if __name__ == '__main__':
-    password = 'cqjxjnds'
+    def test_IncrementPassword(self):
+        self.assertEqual('kdyehdnj', IncrementPassword('kdyehdni'))
+
+def IncrementPassword(password):
+    for i, char in enumerate(reversed(password)):
+        charValue = charInDec(char)
+        if charValue < 26:
+            newPassword = list(password)
+            newPassword[-1]  = string.ascii_lowercase[charValue + 1]
+            return str(newPassword)
 
 def ValidPassword(string):
     if not RuleOne(string):
@@ -63,3 +71,9 @@ def RuleThree(string):
 
 def charInDec(char):
     return int(string.ascii_lowercase.index(char))
+
+if __name__ == '__main__':
+    password = 'cqjxjnds'
+    while not ValidPassword(password):
+        password = IncrementPassword(password)
+
