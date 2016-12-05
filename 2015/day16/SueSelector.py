@@ -20,9 +20,18 @@ class AllSues:
             validSue = True
             for category in testSue.keys():
                 if category in self.sues[sue]:
-                    if self.sues[sue][category] != testSue[category]:
-                        validSue = False
-                        break
+                    if (category == 'cats') or (category == 'trees'):
+                        if self.sues[sue][category] <= testSue[category]:
+                            validSue = False
+                            break
+                    elif (category == 'pomeranians') or (category == 'goldfish'):
+                        if self.sues[sue][category] >= testSue[category]:
+                            validSue = False
+                            break
+                    else:
+                        if self.sues[sue][category] != testSue[category]:
+                            validSue = False
+                            break
             if validSue:
                 return sue
 
