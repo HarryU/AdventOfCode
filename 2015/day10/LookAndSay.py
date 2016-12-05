@@ -9,6 +9,7 @@ def translate(number):
     #     newNumber.append(c)
     # return "".join(newNumber)
 
+
 if __name__ == '__main__':
     number = '1321131112'
     for i in range(40):

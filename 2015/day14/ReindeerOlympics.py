@@ -53,6 +53,7 @@ class Reindeer:
         position = (fullCycles * self.flyTime + min(self.flyTime, fractionalCycles)) * self.speed
         return int(position)
 
+
 if __name__ == '__main__':
     race = ReindeerRace('input.txt')
     positions = race.GetPositions(2503)

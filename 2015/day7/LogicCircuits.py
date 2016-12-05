@@ -78,7 +78,8 @@ def ProcessInput(instructions, circuitObject):
                 continue
             circuitObject.Assign(circuitObject.And(instruction[1], instruction[2]), wire)
         elif 'Or' in instruction:
-            if (instruction[1] not in circuitObject.circuit.keys()) or (instruction[2] not in circuitObject.circuit.keys()):
+            if (instruction[1] not in circuitObject.circuit.keys()) or (
+                instruction[2] not in circuitObject.circuit.keys()):
                 newInstructions[wire] = instructions[wire]
                 continue
             circuitObject.Assign(circuitObject.Or(instruction[1], instruction[2]), wire)
@@ -99,6 +100,7 @@ def ProcessInput(instructions, circuitObject):
             circuitObject.Assign(circuitObject.Not(instruction[1]), wire)
     if len(newInstructions.keys()) > 0:
         ProcessInput(newInstructions, circuitObject)
+
 
 if __name__ == '__main__':
     circuit = Circuit()

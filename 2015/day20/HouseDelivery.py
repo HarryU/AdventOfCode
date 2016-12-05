@@ -11,11 +11,12 @@ def totalPresents(house):
 
 def getFactors(number):
     factors = set()
-    for i in range(1, int((number**0.5)+1)):
+    for i in range(1, int((number ** 0.5) + 1)):
         if number % i == 0:
             factors.add(i)
             factors.add(number / i)
     return factors
+
 
 if __name__ == '__main__':
     presents = 0

@@ -1,6 +1,7 @@
 import LogicCircuits
 import unittest
 
+
 class LogicCircuitTests(unittest.TestCase):
     def setUp(self):
         self.circuit = LogicCircuits.Circuit()
@@ -52,5 +53,3 @@ class LogicCircuitTests(unittest.TestCase):
         self.assertEqual(114, circuit.Get('g'))
         self.assertEqual(65412, circuit.Get('h'))
         self.assertEqual(65079, circuit.Get('i'))
-
-

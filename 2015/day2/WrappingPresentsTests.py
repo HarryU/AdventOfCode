@@ -1,6 +1,7 @@
 import unittest
 import wrappingPaperCalculator
 
+
 class WrappingPresentsTests(unittest.TestCase):
     def setUp(self):
         pass
@@ -12,5 +13,3 @@ class WrappingPresentsTests(unittest.TestCase):
     def test_ribbonCalculator(self):
         result = wrappingPaperCalculator.calculateRibbonLength('2x3x4')
         self.assertEqual(34, result)
-
-

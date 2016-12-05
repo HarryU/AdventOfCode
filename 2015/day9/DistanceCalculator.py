@@ -34,6 +34,7 @@ class Destinations:
             routes[order] = distance
         return routes
 
+
 if __name__ == '__main__':
     destinations = Destinations('input.txt')
     destinations.ProcessFile()

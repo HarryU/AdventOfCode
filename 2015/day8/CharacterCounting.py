@@ -17,6 +17,7 @@ def charsInString(s):
 def encodedLength(s):
     return len(s) + s.count('\\') + s.count('"') + 2
 
+
 if __name__ == '__main__':
     code = 0
     string = 0

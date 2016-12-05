@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class ChristmasLights:
     def __init__(self):
         self.lights = np.zeros((1000, 1000))
@@ -40,7 +41,8 @@ class ChristmasLights:
 
     def TurnOff(self, start, stop):
         startX, startY, stopX, stopY = self.GetIndices(start, stop)
-        self.lights[startX:stopX, startY:stopY][np.where(self.lights[startX:stopX, startY:stopY] > 0)] = (self.lights[startX:stopX, startY:stopY] - 1)[np.where(self.lights[startX:stopX, startY:stopY] > 0)]
+        self.lights[startX:stopX, startY:stopY][np.where(self.lights[startX:stopX, startY:stopY] > 0)] = \
+        (self.lights[startX:stopX, startY:stopY] - 1)[np.where(self.lights[startX:stopX, startY:stopY] > 0)]
 
     def TurnOffPart1(self, start, stop):
         startX, startY, stopX, stopY = self.GetIndices(start, stop)
@@ -52,6 +54,7 @@ class ChristmasLights:
         stopX = int(stop.split(',')[0]) + 1
         stopY = int(stop.split(',')[1]) + 1
         return startX, startY, stopX, stopY
+
 
 christmasLights = ChristmasLights()
 

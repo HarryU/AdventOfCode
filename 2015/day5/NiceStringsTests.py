@@ -1,6 +1,7 @@
 import NiceStrings
 import unittest
 
+
 class NiceStringsTests(unittest.TestCase):
     def setUp(self):
         self.testString = 'ugknbfddgicrmopn'
