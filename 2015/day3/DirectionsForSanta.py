@@ -16,6 +16,7 @@ def GetUniqueHouses(directions):
         allLocations.add(tuple(location))
     return allLocations
 
+
 def TwoSantas(directions):
     santaDirections = GetSantaDirections(directions)
     robotDirections = GetRobotDirections(directions)
@@ -31,6 +32,7 @@ def GetSantaDirections(directions):
 
 def GetRobotDirections(directions):
     return directions[1:][::2]
+
 
 with open('input.txt', 'r') as f:
     directions = f.read()

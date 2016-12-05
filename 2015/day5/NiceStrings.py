@@ -54,6 +54,7 @@ def IsNiceNewRules(string):
         return False
     return True
 
+
 with open('input.txt', 'r') as f:
     newRulesCounter = 0
     oldRulesCounter = 0

@@ -11,4 +11,5 @@ def HashSecret(secret, targetLeadingString):
             return str(testHash)
         testHash += 1
 
+
 print 'Lowest number that produces hexMD5 starting with 6 0s: ', HashSecret('bgvyzdsv', '000000')

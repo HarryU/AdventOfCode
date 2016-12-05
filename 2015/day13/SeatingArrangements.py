@@ -1,5 +1,6 @@
 import itertools
 
+
 class SeatPlan:
     def __init__(self, filename):
         self.happinessValues = self.Parse(filename)
@@ -25,8 +26,8 @@ class SeatPlan:
     def TotalHappiness(self, seatingOrder):
         total = 0
         for i in range(len(seatingOrder)):
-            total += self.GetHappinessChange(seatingOrder[i], seatingOrder[i-1])
-            total += self.GetHappinessChange(seatingOrder[i], seatingOrder[i+1 if i+1 < len(seatingOrder) else 0])
+            total += self.GetHappinessChange(seatingOrder[i], seatingOrder[i - 1])
+            total += self.GetHappinessChange(seatingOrder[i], seatingOrder[i + 1 if i + 1 < len(seatingOrder) else 0])
         return total
 
     def AddExtraPerson(self, name):
@@ -37,6 +38,7 @@ class SeatPlan:
 
     def GetAllSeatingOrders(self):
         return itertools.permutations(self.happinessValues.keys(), len(self.happinessValues.keys()))
+
 
 if __name__ == '__main__':
     seating = SeatPlan('input.txt')

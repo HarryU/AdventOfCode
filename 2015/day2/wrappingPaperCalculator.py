@@ -15,7 +15,7 @@ def getDimsAsInts(line):
 def calculateRibbonLength(line):
     dims = sorted(getDimsAsInts(line))
     ribbon = (2 * dims[0]) + (2 * dims[1])
-    ribbon += (dims[0] * dims [1] * dims[2])
+    ribbon += (dims[0] * dims[1] * dims[2])
     return ribbon
 
 
@@ -28,5 +28,6 @@ if __name__ == '__main__':
                 totalPaper += calculatePresentSize(line)
                 totalRibbon += calculateRibbonLength(line)
         print 'Wrapping paper needed: ', totalPaper, '\n Ribbon needed: ', totalRibbon
+
 
     getPuzzleResult()

@@ -1,5 +1,7 @@
 from itertools import groupby
 import string
+
+
 # import unittest
 #
 #
@@ -55,7 +57,8 @@ def ValidPassword(string):
 
 def RuleOne(string):
     for i in range(len(string) - 2):
-        if (charInDec(string[i]) == charInDec(string[i+1]) - 1) and (charInDec(string[i]) == charInDec(string[i+2]) - 2):
+        if (charInDec(string[i]) == charInDec(string[i + 1]) - 1) and (
+            charInDec(string[i]) == charInDec(string[i + 2]) - 2):
             return True
     return False
 
@@ -78,6 +81,7 @@ def RuleThree(string):
 
 def charInDec(char):
     return int(string.ascii_lowercase.index(char))
+
 
 if __name__ == '__main__':
     password = 'cqjxjnds'

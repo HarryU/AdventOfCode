@@ -1,6 +1,7 @@
 import ReindeerOlympics
 import unittest
 
+
 class TestReindeerOlympics(unittest.TestCase):
     def setUp(self):
         self.filename = 'testInput.txt'

@@ -1,6 +1,7 @@
 import DirectionsForSanta
 import unittest
 
+
 class DirectionsTests(unittest.TestCase):
     def setUp(self):
         self.testDirections = '^>v<'
