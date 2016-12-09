@@ -50,6 +50,30 @@ class TestInstructionParser(unittest.TestCase):
         mock.assert_called_with('col', 1, 1)
 
 
+class TestInstructionGenerator(unittest.TestCase):
+    def setUp(self):
+        self.generator = InstructionGenerator()
+        self.keypad = KeypadDisplay((1, 9))
+        self.parser = InstructionParser(self.keypad)
+
+    def test_RowIsCorrectlyGenerated(self):
+        testRow = np.array([0, 0, 1, 0, 1, 1, 0, 1, 1])
+        self.generator.generateRowInstructions(testRow)
+        for instruction in self.generator.instructions:
+            self.parser.parse(instruction)
+        nptest.assert_array_equal(np.array([testRow]), self.keypad.display)
+
+    def test_InstructionGeneration(self):
+        self.keypad.display = np.zeros((3, 7))
+        testArray = np.array([[0, 1, 0, 0, 1, 0, 1],
+                              [1, 0, 1, 0, 0, 0, 0],
+                              [0, 1, 0, 0, 0, 0, 0]])
+        self.generator.generateInstructionsRowByRowAndShiftRowsDown(testArray)
+        for instruction in self.generator.instructions:
+            self.parser.parse(instruction)
+        nptest.assert_array_equal(testArray, self.keypad.display)
+
+
 class KeypadDisplay:
     def __init__(self, dimensions=(6, 50)):
         self.display = np.zeros(dimensions)
@@ -81,29 +105,6 @@ class InstructionParser:
             shift = int(string.split('=')[1].split('by ')[1])
             self.keypad.rotate(direction, index, shift)
 
-
-class TestInstructionGenerator(unittest.TestCase):
-    def setUp(self):
-        self.generator = InstructionGenerator()
-        self.keypad = KeypadDisplay((1, 9))
-        self.parser = InstructionParser(self.keypad)
-
-    def test_RowIsCorrectlyGenerated(self):
-        testRow = np.array([0, 0, 1, 0, 1, 1, 0, 1, 1])
-        self.generator.generateRowInstructions(testRow)
-        for instruction in self.generator.instructions:
-            self.parser.parse(instruction)
-        nptest.assert_array_equal(np.array([testRow]), self.keypad.display)
-
-    def test_InstructionGeneration(self):
-        self.keypad.display = np.zeros((3, 7))
-        testArray = np.array([[0, 1, 0, 0, 1, 0, 1],
-                              [1, 0, 1, 0, 0, 0, 0],
-                              [0, 1, 0, 0, 0, 0, 0]])
-        self.generator.generateInstructionsRowByRowAndShiftRowsDown(testArray)
-        for instruction in self.generator.instructions:
-            self.parser.parse(instruction)
-        nptest.assert_array_equal(testArray, self.keypad.display)
 
 
 class InstructionGenerator:
@@ -140,38 +141,218 @@ class InstructionGenerator:
                     self.instructions.append(''.join(['rotate column x=', str(i), ' by 1']))
             rowCount -= 1
 
+    def generatePixelsFromString(self, string):
+        pixels = np.array([[], [], [], [], [], [], []])
+        for char in string:
+            pixels = np.concatenate((pixels, characters[char]), axis=1)
+        return pixels
+
+characters = {
+            ' ': np.zeros((7, 2)),
+            'A': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'B': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'C': np.array([[0, 0, 0, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'D': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'E': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'F': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'G': np.array([[0, 0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 1, 0],
+                         [0, 1, 0, 0, 1, 0],
+                         [0, 1, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0, 0]]),
+            'H': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'I': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'J': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'K': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'L': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'M': np.array([[0, 0, 0, 0, 0, 0, 0],
+                         [0, 1, 1, 0, 1, 1, 0],
+                         [0, 1, 0, 1, 0, 1, 0],
+                         [0, 1, 0, 0, 0, 1, 0],
+                         [0, 1, 0, 0, 0, 1, 0],
+                         [0, 1, 0, 0, 0, 1, 0],
+                         [0, 0, 0, 0, 0, 0, 0]]),
+            'N': np.array([[0, 0, 0, 0, 0, 0],
+                         [0, 1, 0, 0, 0, 1],
+                         [0, 1, 1, 0, 0, 1],
+                         [0, 1, 0, 1, 0, 1],
+                         [0, 1, 0, 0, 1, 1],
+                         [0, 1, 0, 0, 0, 1],
+                         [0, 0, 0, 0, 0, 0]]),
+            'O': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'P': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'Q': np.array([[0, 0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 1, 0],
+                         [0, 1, 0, 0, 1, 0],
+                         [0, 1, 0, 0, 1, 0],
+                         [0, 1, 1, 1, 1, 1],
+                         [0, 0, 0, 0, 1, 1]]),
+            'R': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'S': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'T': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'U': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'V': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'W': np.array([[0, 0, 0, 0, 0, 0, 0],
+                         [0, 1, 0, 0, 0, 1, 0],
+                         [0, 1, 0, 0, 0, 1, 0],
+                         [0, 1, 0, 0, 0, 1, 0],
+                         [0, 1, 0, 1, 0, 1, 0],
+                         [0, 0, 1, 0, 1, 0, 0],
+                         [0, 0, 0, 0, 0, 0, 0]]),
+            'X': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 0, 0, 0, 0]]),
+            'Y': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 0, 1, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 0, 0, 0, 0]]),
+            'Z': np.array([[0, 0, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 1, 0],
+                         [0, 0, 1, 0, 0],
+                         [0, 1, 0, 0, 0],
+                         [0, 1, 1, 1, 0],
+                         [0, 0, 0, 0, 0]])}
+
 
 if __name__ == '__main__':
+
     keypad = KeypadDisplay()
     parser = InstructionParser(keypad)
     with open('input', 'r') as f:
         for line in f:
             parser.parse(line)
             cv2.imshow('keypad', cv2.resize(keypad.display, None, fx=20, fy=20, interpolation=cv2.INTER_CUBIC))
-            cv2.waitKey(100)
-    print 'Part 1: ', np.sum(keypad.display)
+            cv2.waitKey(5)
+    print 'Part 1: ', int(np.sum(keypad.display))
     cv2.imshow('keypad', cv2.resize(keypad.display, None, fx=20, fy=20, interpolation=cv2.INTER_CUBIC))
-    cv2.waitKey(1000)
+    cv2.waitKey(0)
     generator = InstructionGenerator()
-    reverseInput = np.zeros((7, 18))
-    reverseInput[1:-1, 1] = 1
-    reverseInput[3, 2] = 1
-    reverseInput[1:-1, 3] = 1
-    reverseInput[1:-1, 5] = 1
-    reverseInput[1, 6] = 1
-    reverseInput[3, 6] = 1
-    reverseInput[5, 6] = 1
-    reverseInput[1:-1, 8] = 1
-    reverseInput[5, 9] = 1
-    reverseInput[1:-1, 11] = 1
-    reverseInput[5, 12] = 1
-    reverseInput[1:-1, 14:17] = 1
-    reverseInput[2:-2, 15:16] = 0
-
-    generator.generateInstructionsRowByRowAndShiftRowsDown(reverseInput)
+    pixels = generator.generatePixelsFromString('HELLO WORLD')
+    keypad2 = KeypadDisplay(pixels.shape)
+    parser2 = InstructionParser(keypad2)
+    generator.generateInstructionsRowByRowAndShiftRowsDown(pixels)
     for instruction in generator.instructions:
-        parser.parse(instruction)
-        cv2.imshow('keypad', cv2.resize(keypad.display, None, fx=20, fy=20, interpolation=cv2.INTER_CUBIC))
-        cv2.waitKey(50)
-    cv2.imshow('keypad', cv2.resize(keypad.display, None, fx=20, fy=20, interpolation=cv2.INTER_CUBIC))
+        parser2.parse(instruction)
+        cv2.imshow('keypad', cv2.resize(keypad2.display, None, fx=20, fy=20, interpolation=cv2.INTER_CUBIC))
+        cv2.waitKey(5)
+    cv2.imshow('keypad', cv2.resize(keypad2.display, None, fx=20, fy=20, interpolation=cv2.INTER_CUBIC))
     cv2.waitKey(0)
