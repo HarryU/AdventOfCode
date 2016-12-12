@@ -7,9 +7,9 @@ class LiftOfHanoi:
     def __init__(self):
         self.initialFloor = 1
         self.initialfloorContents = {1: ['TG', 'TM', 'PG', 'SG'],
-                              2: ['PM', 'SM'],
-                              3: ['OG', 'OM', 'RG', 'RM'],
-                              4: []}
+                                     2: ['PM', 'SM'],
+                                     3: ['OG', 'OM', 'RG', 'RM'],
+                                     4: []}
         self.moves = list()
         self.states = set()
 
@@ -32,20 +32,20 @@ class LiftOfHanoi:
                 return iteration
             if (self.validArrangement(floorContents[currentFloor])) and (self.validArrangement(floorContents[oldFloor])):
                 pairedContents = self.getPairs(floorContents)
-                if frozenset((pairedContents, currentFloor)) not in self.states:
-                    self.states.add(frozenset((pairedContents, currentFloor)))
+                currentState = (pairedContents, currentFloor)
+                if currentState not in self.states:
+                    self.states.add(currentState)
                     itemCombinationsAvailableOnThisFloor = [items for numberOfItems in range(1, 3) for items in itertools.combinations(floorContents[currentFloor], numberOfItems)]
                     minFloor = 1
                     while len(floorContents[minFloor]) == 0:
                         minFloor += 1
-                    if currentFloor == 1:
+                    if currentFloor == minFloor:
                         possibleDirections = [1]
                     elif currentFloor == 4:
                         possibleDirections = [-1]
                     else:
                         possibleDirections = [-1, 1]
-                    newMovesFromCurrentState = [(move, (copy.deepcopy(floorContents), currentFloor), iteration + 1) for move in
-                                   self.getPossibleMoves(itemCombinationsAvailableOnThisFloor, possibleDirections)]
+                    newMovesFromCurrentState = [(move, (copy.deepcopy(floorContents), currentFloor), iteration + 1) for move in self.getPossibleMoves(itemCombinationsAvailableOnThisFloor, possibleDirections)]
                     for combo in newMovesFromCurrentState:
                         self.moves.append(combo)
         return -1
@@ -53,7 +53,7 @@ class LiftOfHanoi:
     def getPairs(self, floorContents):
         generators = [(floor, item[0]) for floor in range(1, 5) for item in floorContents[floor] if 'G' in item]
         chips = [(floor, item[0]) for floor in range(1, 5) for item in floorContents[floor] if 'M' in item]
-        pairs = frozenset(frozenset((floorGen, floorChip)) for (floorGen, gen) in generators for (floorChip, chip) in chips if gen == chip)
+        pairs = tuple([tuple(sorted([floorGen, floorChip])) for (floorGen, gen) in generators for (floorChip, chip) in chips if gen == chip])
         return pairs
 
     def getPossibleMoves(self, itemCombinationsAvailableOnThisFloor, possibleDirections):
@@ -83,7 +83,7 @@ class TestListOfHanoi(unittest.TestCase):
                                     2: ['HG'],
                                     3: ['LG'],
                                     4: []})
-        self.assertEqual(frozenset({frozenset([2, 1]), frozenset([3, 1])}), pairs)
+        self.assertEqual(tuple([(1, 2), (1, 3)]), pairs)
 
     def test_ValidCheck(self):
         self.assertTrue(self.lift.validArrangement(['HG', 'HM']))
@@ -103,13 +103,22 @@ class TestListOfHanoi(unittest.TestCase):
                                           4: []}
         self.assertEqual(11, self.lift.solve())
 
-    def test_WithRealInput(self):
-        self.lift.initialfloorContents = {1: ['SG', 'SM', 'PG', 'PG'],
-                                          2: ['TG', 'RM', 'RG', 'CG', 'CM'],
-                                          3: ['TM'],
-                                          4: []}
+    def test_WithRealPart1Input(self):
         self.assertEqual(31, self.lift.solve())
+
+    def test_WithRealPart2Input(self):
+        self.lift.initialfloorContents[1].append('EG')
+        self.lift.initialfloorContents[1].append('EM')
+        self.lift.initialfloorContents[1].append('DG')
+        self.lift.initialfloorContents[1].append('DM')
+        self.assertEqual(55, self.lift.solve())
 
 if __name__ == '__main__':
     lift = LiftOfHanoi()
-    print lift.solve()
+    print 'Part 1:', lift.solve()
+    liftPart2 = LiftOfHanoi()
+    liftPart2.initialfloorContents[1].append('EG')
+    liftPart2.initialfloorContents[1].append('EM')
+    liftPart2.initialfloorContents[1].append('DG')
+    liftPart2.initialfloorContents[1].append('DM')
+    print 'Part 2:', liftPart2.solve()
