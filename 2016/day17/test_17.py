@@ -1,7 +1,7 @@
 from hashlib import md5
 from itertools import compress
 
-input = "pvhmgsws"
+input = "hhhxzeay"
 moves = {
     'U': lambda x, y: (x, y - 1),
     'D': lambda x, y: (x, y + 1),
