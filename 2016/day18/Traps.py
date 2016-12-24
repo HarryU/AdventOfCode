@@ -70,5 +70,5 @@ if __name__ == "__main__":
                 puzzle_input.append(char!='.')
     traps = Traps(puzzle_input)
     traps.gen_all_rows(40)
-    print(sum([1 for row in traps.traps for tile in row if not tile]))
-
+    safe_tile_counts = [row.count(False) for row in traps.traps]
+    print(sum(safe_tile_counts))
