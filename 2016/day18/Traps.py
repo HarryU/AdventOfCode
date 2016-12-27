@@ -20,10 +20,16 @@ class TestTrapFinder(unittest.TestCase):
                           [True, True, False, False, True]], self.traps.traps)
 
     def test_full_example(self):
-        traps = Traps([False, True, True, False, True,
-                       False, True, True, True, True])
+        traps = Traps([False, True, True, False, True, False, True, True, True, True])
         traps.gen_all_rows(10)
-        self.assertEqual(38, sum([1 for row in traps.traps for x in row if not x]))
+        self.assertEqual(38, sum([row.count(False) for row in traps.traps]))
+
+    def test_real_puzzle(self):
+        trap_string = '.^^^^^.^^^..^^^^^...^.^..^^^.^^....^.^...^^^...^^^^..^...^...^^.^.^.......^..^^...^.^.^^..^^^^^...^.'
+        input = [tile == '^' for tile in trap_string]
+        traps = Traps(input)
+        traps.gen_all_rows(40)
+        self.assertEqual(1956, sum([row.count(False) for row in traps.traps]))
 
 
 class Traps:
@@ -50,25 +56,26 @@ class Traps:
             next_row.append(self.is_trap(left_trap, centre_trap, right_trap))
         self.traps.append(next_row)
 
-    def is_trap(self, left_trap, centre_trap, right_trap):
+    @staticmethod
+    def is_trap(left_trap, centre_trap, right_trap):
         if (left_trap and centre_trap) and not right_trap:
             return True
         if (centre_trap and right_trap) and not left_trap:
             return True
-        if left_trap and not (centre_trap and right_trap):
+        if left_trap and not (centre_trap or right_trap):
             return True
-        if right_trap and not (centre_trap and left_trap):
+        if right_trap and not (centre_trap or left_trap):
             return True
         return False
 
 if __name__ == "__main__":
     puzzle_input = list()
-    result = 0
     with open('input', 'r') as f:
         for line in f:
             for char in line.strip():
-                puzzle_input.append(char!='.')
+                puzzle_input.append(char != '.')
     traps = Traps(puzzle_input)
     traps.gen_all_rows(40)
-    print(sum([1 for row in traps.traps for tile in row if not tile]))
-
+    print('Part 1: ', sum([1 for row in traps.traps for tile in row if not tile]))
+    traps.gen_all_rows(400000)
+    print('Part 2: ', sum([1 for row in traps.traps for tile in row if not tile]))
